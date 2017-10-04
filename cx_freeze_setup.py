@@ -12,5 +12,6 @@ if sys.platform == "win32":
  
 options = {}
 options["build_exe"] = {"include_files":["bootstrap","js","LICENSE","login.html","main.html","README.md"],"optimize":2}
+options["bdist_mac"] = {"iconfile": "zookeeper-image.icns", "custom_info_plist": "Info-highres.plist"}
 
 setup( name = "zkui", version = "0.3", description = "A ZooKeeper GUI Frontend", options = options, executables = [Executable("zkui.py", base=base, icon="apache-feather.ico")])
