@@ -1,100 +1,41 @@
-# zkui
-zkui is a cross platform GUI frontend of [Apache ZooKeeper](http://zookeeper.apache.org/) implemented with Python3 + Qt5 + HTML5.
+# zkui for MacOS
+This is a clone of the original [zkui](https://github.com/echoma/zkui) with the prebuild artifact for MacOS.
 
-*A screenshot on Xubuntu 15.04*
-![The Main Window](https://github.com/echoma/zkui/wiki/snapshot_20150122/02_create_child_0902.JPG)
+## Download
+[zkui-0.3.dmg](https://github.com/akozich/zkui/releases/download/0.3-mac/zkui-0.3.dmg)
 
-[Check Here For More Screenshots](https://github.com/echoma/zkui/wiki/Snapshots)
+## Or build yourself
+PyQt5 no longer has PyQtWebkit so you'll have to build pyqt5 from sources. Qt5 itself can be installed from Homebrew:
 
-# Features
-* Browse the ZooKeeper node tree, edit the node's data.
-* Copy a node to new path recursively.
-* Export / Import between node and your local storage recursively.
-* Delete node and its children  recursively.
-* ACL supportted, sheme including world,digest,ip
-* Use a pre-configured default ACL when create new node
-* Cross-platform, this is the nature given by Python3 and Qt5
+```
+brew install qt@5.5
 
-# Download Pre-built Binaries
+mkdir /tmp/qt
+cd /tmp/qt
+curl -O https://kent.dl.sourceforge.net/project/pyqt/sip/sip-4.18.1/sip-4.18.1.tar.gz
+tar xvf sip-4.18.1.tar.gz
+cd sip-4.18.1/
+python3 configure.py -d /usr/local/lib/python3.6/site-packages -b /usr/local/bin -e /usr/local/include -v /usr/local/share/sip --arch x86_64
+make
+make install
+cd ..
 
-If it's too complicated for you to build a Python3+PyQt5 environment, You can [download pre-built binary executables here](https://github.com/echoma/zkui/wiki/Download).
 
-* Currently, there are only MS Windows executables provided.
-* The latest binary package is uploaded on 2016-02-03
+curl -O https://kent.dl.sourceforge.net/project/pyqt/PyQt5/PyQt-5.5.1/PyQt-gpl-5.5.1.tar.gz
+tar xvf PyQt-gpl-5.5.1.tar.gz
+cd PyQt-gpl-5.5.1/
+python3 configure.py --confirm-license -d /usr/local/lib/python3.6/site-packages -b /usr/local/bin --qmake /usr/local/opt/qt\@5.5/bin/qmake --sip-incdir /usr/local/include -v /usr/local/share/sip/Qt5 --no-qml-plugin --no-designer-plugin
+make
+make install
+```
 
-# Build By Yourself
+Then build the project itself as described in the original project 
 
-#### 1. Install Python3.x
+When the binary is built using `cx_freeze` all installed packages can be removed
 
-* The latest version is 3.4.3 as Ｉ write this. This is also the recommended version. [download it here](http://python.org/)
-
-* Install PyQt5 package.
-
-    We use PyQt5 to draw the native window and use its QWebkit to render all the gui component inside the window.
-
-    On Linux distribution, you can install it through software center, or download [source code](http://www.riverbankcomputing.com/software/pyqt/download5) and compile it by yourself.
-
-    On MS Windows, you can install it via a [binary installer](http://www.riverbankcomputing.com/software/pyqt/download5)
-
-* IMPORTANT: Qt5.6 removed QtWebkit. So, Qt5.5 is the newest version we can use to build zkui.
-
-  I was planning to port zkui to nw.js, but doesn't have enough spare time yest.
-
-* Install Kazoo package.
-
-    Kazoo is a pure Python3 implemented ZooKeeper client.
-
-    Install this package with this command: **python3 -m pip install kazoo**
-
-* Install pyyaml package.
-
-    using this command: **python3 -m pip install pyyaml**
-
-#### 2. Run zkui
-
-* Start zkui with this command:  **python3 ./zkui.py**
-
-# Freeze Python Scripts Into Binaries
-
-#### Install Python3's cx_Freeze package.
-
-* cx_Freeze is a set of cross platform tools which can freeze Python scripts into executables.
-
-* Install this package with this commad: **python3 -m pip install cx_Freeze**
-
-#### On MS-Windows
-
-* build executables: **python3 ./cx_freeze_setup.py build**
-
-* build MS Installer: **python3 ./cx_freeze_setup.py bdist_msi**
-
-#### On Linux
-
-* build RPM *(not tested)*: **python3 ./cx_freeze_setup.py bdist_rpm**
-
-#### On Mac OSX
-
-* build DMG: **python3 ./cx_freeze_setup.py bdist_dmg**
-
-# Simple Usage Guidance
-The whole UI is composed with three parts:
-
-* The top part is "navigation". It shows which node you are browsing. The "Go Up" and "Go Down" button is very helpful.
-* The left part is "children and operations".  The blue blocks is the children of current node, click it to browse the child. The orange button has many useful operations, discover them by yourself.
-* The right part is "node data". You can view and edit the node data here.
-
-# Miscellaneous
-
-#### license
-
-* I choose Apache License v2, but I am not an expert on license. Zkui uses many other opensource modules, I am not sure whether Apache Licese v2 is legal.
-
-#### todo
-
-* switch to QT5.5/5.6 to use QtWebEngine for better html5 support
-* merge new upstream releases of h5 component
-* make editor window resizable instead of editor itself resizable
-* select export/import directory by dialog
-* support dump node tree at an interval
-* node value editor syntax highlighting
-* diff utility when editor node value
+```
+python3 -m pip uninstall kazoo pyyaml cx_Freeze 
+brew uninstall qt@5.5
+rm -rf /usr/local/bin/sip /usr/local/include/sip.h /usr/local/include/sip.h /usr/local/lib/python3.6/site-packages/sip*
+rm -rf /usr/bin/{pyuic5,pyrcc5,pylupdate5} /usr/local/lib/python3.6/site-packages/PyQt5
+```
